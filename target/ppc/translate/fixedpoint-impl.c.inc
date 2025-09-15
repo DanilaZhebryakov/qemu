@@ -35,9 +35,9 @@ static bool do_ldst(DisasContext *ctx, int rt, int ra, TCGv displ, bool update,
     ea = do_ea_calc(ctx, ra, displ);
     mop ^= ctx->default_tcg_memop_mask;
     if (store) {
-        gen_helper_do_store(tcg_env, ea, tcg_constant_i32(rt), tcg_constant_i32(mop));
+        tcg_gen_qemu_st_tl(cpu_gpr[rt], ea, ctx->mem_idx, mop);
     } else {
-        gen_helper_do_load(tcg_env, ea, tcg_constant_i32(rt), tcg_constant_i32(mop));
+        tcg_gen_qemu_ld_tl(cpu_gpr[rt], ea, ctx->mem_idx, mop);
     }
     if (update) {
         tcg_gen_mov_tl(cpu_gpr[ra], ea);
